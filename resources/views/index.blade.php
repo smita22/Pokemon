@@ -28,31 +28,22 @@
     <body>
         
         <div class="container">
-            <h1>Pokemon data</h1>
-            @if(!empty($paginationData) && $paginationData->count())
-                @foreach($paginationData as $key => $value)
+            <center><h1>Pokemon data</h1></center>
+
+            @foreach ($pokemonRenderData as $pokemonRenderData)
                 <div class="card tabcard" style="width: 18rem;">
-                  <div class="card-header">
-                    {{ $value['name'] }}
-                  </div>
+                  <img class="card-img-top" src={{$pokemonRenderData['img']}} alt="Card image cap">
                   <div class="card-body">
-                    <a href="{{ $value['url'] }}" >{{ $value['url'] }}</a>
+                    <h5 class="card-title">{{$pokemonRenderData['name']}}</h5>
+                    <ul>
+                        @foreach ($pokemonRenderData['type'] as $type)
+                            <li>{{$type}}</li>
+                        @endforeach
+                    </ul>                   
                   </div>
-                </div>                        
-                @endforeach
-            @else                
-                <div colspan="10">There are no data.</div>
-            @endif
-            <div class="content">
-                <div class="d-flex justify-content-center">
-                {!! $paginationData->links() !!}
-            </div>  
-                
-            </div>  
+                </div>                
+            @endforeach
 
         </div>
-        
-                     
-        
     </body>
 </html>

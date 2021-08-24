@@ -17,19 +17,23 @@ class pokemonController extends Controller
     public function index()
     {
         $pokemonData = Http::get(env('API_URL'))->json();
-        
+        $pokemonRenderData = array();
         if (!empty($pokemonData)) {
             foreach ($pokemonData['results'] as $pokemonData) {
-                
-                $pokemon = new Pokemon;
-                $pokemon->name = $pokemonData['name'];
-                $pokemon->url = $pokemonData['url'];
-                $pokemon->save();
+                $pokeData= Http::get($pokemonData['url'])->json();
+                $pokeId = $pokeData['id'];
+                $pokeName = $pokeData['name'];
+                $pokeType = $pokeData['types'];
+                $pokeTypeNames = array();
+                $imageUrl = env('IMAGE_URL')  . $pokeId . ".png";
+                foreach ($pokeType as $pokeType) {
+                    array_push($pokeTypeNames,$pokeType['type']['name'])  ;                    
+                }
+                $onePokeData = array("id"=>$pokeId,"name"=>$pokeName,"img"=>$imageUrl,"type"=>$pokeTypeNames);
+                array_push($pokemonRenderData,$onePokeData);
             }
         }
-        
-        $paginationData = Pokemon::paginate(10);      
-        return view('index',compact('paginationData'));
+        return View::make('index', array('pokemonRenderData' => $pokemonRenderData));
     }
 
     /**
